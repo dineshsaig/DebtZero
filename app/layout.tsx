@@ -194,12 +194,6 @@ function SiteFooter() {
                   color: "var(--text-faint)",
                   transition: "color 0.15s",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--text-muted)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--text-faint)")
-                }
               >
                 {item}
               </a>

@@ -1,9 +1,3 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Page Not Found",
-};
-
 export default function NotFound() {
   return (
     <div
@@ -17,7 +11,6 @@ export default function NotFound() {
         padding: "3rem 1.5rem",
       }}
     >
-      {/* Glowing number */}
       <div
         style={{
           fontFamily: "DM Serif Display, Georgia, serif",
