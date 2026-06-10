@@ -116,7 +116,7 @@ export function utilizationRatio(balance: number, limit: number): number {
 export function transferFee(
   amount: number,
   feePercent: number,
-  feeMin: number
+  feeMin = 0
 ): number {
   return Math.max(amount * feePercent, feeMin);
 }
