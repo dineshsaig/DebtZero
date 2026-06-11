@@ -143,44 +143,6 @@ const TYPE_COLORS: Record<string, string> = {
   other:         "#8DA0B3",
 };
 
-/* ─── Gradient canvas background ────────────────────────────────── */
-function GradientCanvas() {
-  return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      {/* Deep base */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background:
-          "radial-gradient(ellipse 80% 55% at 50% -5%, rgba(0,201,167,0.16) 0%, transparent 60%), " +
-          "radial-gradient(ellipse 55% 45% at 82% 85%, rgba(61,255,192,0.09) 0%, transparent 55%), " +
-          "radial-gradient(ellipse 45% 55% at 8% 92%, rgba(75,101,255,0.09) 0%, transparent 55%), " +
-          "var(--bg-primary)",
-      }} />
-      {/* Mint orb — upper-left */}
-      <div style={{
-        position: "absolute", top: "-18%", left: "-10%",
-        width: "48vw", height: "48vw", borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(0,201,167,0.13) 0%, transparent 70%)",
-        filter: "blur(48px)",
-      }} />
-      {/* Indigo orb — lower-right */}
-      <div style={{
-        position: "absolute", bottom: "2%", right: "-12%",
-        width: "44vw", height: "44vw", borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(75,101,255,0.11) 0%, transparent 70%)",
-        filter: "blur(56px)",
-      }} />
-      {/* Gold orb — center-left */}
-      <div style={{
-        position: "absolute", top: "42%", left: "30%",
-        width: "32vw", height: "32vw", borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(245,166,35,0.05) 0%, transparent 70%)",
-        filter: "blur(64px)",
-      }} />
-    </div>
-  );
-}
 
 /* ─── Main Dashboard ─────────────────────────────────────────────── */
 export function DashboardClient() {
@@ -263,11 +225,21 @@ export function DashboardClient() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg-primary)", position: "relative" }}>
-      <GradientCanvas />
+    <div style={{
+      minHeight: "100vh",
+      position: "relative",
+      backgroundColor: "#0D1B2A",
+      backgroundImage: [
+        "radial-gradient(ellipse 90% 50% at 50% -5%, rgba(0,201,167,0.35) 0%, transparent 55%)",
+        "radial-gradient(ellipse 50% 60% at -5% 15%, rgba(0,201,167,0.25) 0%, transparent 60%)",
+        "radial-gradient(ellipse 50% 60% at 105% 85%, rgba(75,101,255,0.22) 0%, transparent 60%)",
+        "radial-gradient(ellipse 45% 45% at 55% 55%, rgba(245,166,35,0.10) 0%, transparent 60%)",
+      ].join(", "),
+    }}>
 
       {/* ── Dashboard Header ── */}
       <div style={{
+        position: "relative", zIndex: 1,
         background: "rgba(8,15,23,0.60)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
@@ -317,7 +289,7 @@ export function DashboardClient() {
         </div>
       </div>
 
-      <div className="section-wrapper" style={{ padding: "2rem 1.5rem" }}>
+      <div className="section-wrapper" style={{ padding: "2rem 1.5rem", position: "relative", zIndex: 1 }}>
 
         {/* ── OVERVIEW TAB ── */}
         {activeTab === "overview" && (
