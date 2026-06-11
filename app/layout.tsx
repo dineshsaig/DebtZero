@@ -72,7 +72,9 @@ function SiteHeader() {
         <nav style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
           {[
             { label: "Dashboard", href: "/dashboard" },
-            { label: "Strategies", href: "/strategies" },
+            { label: "Calculators", href: "/calculators" },
+            { label: "Balance Transfer", href: "/balance-transfer" },
+            { label: "Budget", href: "/budget" },
             { label: "Learn", href: "/learn" },
           ].map((item) => (
             <a key={item.href} href={item.href} className="btn-ghost" style={{ fontSize: "0.875rem" }}>
