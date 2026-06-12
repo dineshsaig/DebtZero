@@ -1,0 +1,108 @@
+/* ════════════════════════════════════════════════════════════════
+   DebtZero — Glass Card Addendum
+   Merge into globals.css. Requires the updated theme.tsx, which sets:
+     --card-bg, --card-backdrop, --card-border,
+     --card-glass-highlight, --card-glass-shadow,
+     --card-glass-tint, --page-glow
+   ════════════════════════════════════════════════════════════════ */
+
+/* Ambient accent bloom behind the whole page when glass mode is on.
+   Sits on body/app shell so it shows through translucent cards. */
+body,
+.app-shell {
+  background-image: var(--page-glow, none);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  transition: background-image var(--transition-speed, 0.15s) ease;
+}
+
+/* ── Core card ─────────────────────────────────────────────────── */
+.card {
+  position: relative;
+  background: var(--card-bg);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  backdrop-filter: var(--card-backdrop);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-glass-shadow);
+  transition:
+    background var(--transition-speed, 0.15s) ease,
+    border-color var(--transition-speed, 0.15s) ease,
+    box-shadow var(--transition-speed, 0.15s) ease,
+    transform var(--transition-speed, 0.15s) ease;
+}
+
+/* Top-edge highlight: a thin bright line along the upper border,
+   the classic "glass catching light" effect seen in the mockups. */
+[data-card="glass"] .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    160deg,
+    var(--card-glass-highlight) 0%,
+    transparent 35%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Subtle accent-tinted sheen across the card surface */
+[data-card="glass"] .card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--card-glass-tint) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+/* Hover lift — gentle, consistent with restrained motion */
+[data-card="glass"] .card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--accent-rgb), 0.32);
+}
+
+/* Flat fallback keeps existing solid-surface look */
+[data-card="flat"] .card {
+  box-shadow: var(--shadow-card, 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3));
+}
+[data-card="flat"] .card::before,
+[data-card="flat"] .card::after {
+  display: none;
+}
+
+/* Nested/inset glass surfaces (e.g. mini chart containers, list rows)
+   get a lighter touch so they read as "inside" the outer card. */
+[data-card="glass"] .card-inset {
+  background: rgba(var(--accent-rgb), 0.04);
+  border: 1px solid rgba(var(--accent-rgb), 0.12);
+  border-radius: var(--radius-md);
+}
+
+/* Progress bars / debt meter glow intensifies slightly in glass mode
+   to match the luminous bars in the mockups */
+[data-card="glass"] .debt-meter-fill {
+  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.55);
+}
+
+/* Reduced motion: disable hover lift */
+@media (prefers-reduced-motion: reduce) {
+  [data-card="glass"] .card:hover {
+    transform: none;
+  }
+}

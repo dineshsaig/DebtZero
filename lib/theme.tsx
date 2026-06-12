@@ -171,9 +171,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (!mounted) return;
     const root = document.documentElement;
     const accent = ACCENT_TOKENS[settings.accent];
+    const isDark = effectiveMode === "dark";
+    const isGlass = settings.cardStyle === "glass";
 
     // Color mode tokens
-    const colorTokens = effectiveMode === "dark" ? DARK_TOKENS : LIGHT_TOKENS;
+    const colorTokens = isDark ? DARK_TOKENS : LIGHT_TOKENS;
     for (const [k, v] of Object.entries(colorTokens)) {
       root.style.setProperty(k, v);
     }
@@ -196,26 +198,59 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       root.style.setProperty(k, v);
     }
 
-    // Card style
+    /* ── Card style ───────────────────────────────────────────────
+     * Glass cards now derive a layered look from the active accent:
+     * a faint accent-tinted background wash, a brighter top-edge
+     * highlight border, and a soft accent-colored ambient shadow —
+     * matching the 6-accent glass dashboard mockups.
+     */
+    if (isGlass) {
+      root.style.setProperty(
+        "--card-bg",
+        isDark
+          ? `linear-gradient(160deg, rgba(${accent.rgb},0.10), rgba(255,255,255,0.03))`
+          : `linear-gradient(160deg, rgba(${accent.rgb},0.08), rgba(255,255,255,0.55))`
+      );
+      root.style.setProperty("--card-backdrop", "blur(20px) saturate(1.6)");
+      root.style.setProperty(
+        "--card-border",
+        isDark
+          ? `rgba(${accent.rgb},0.22)`
+          : `rgba(${accent.rgb},0.18)`
+      );
+      root.style.setProperty(
+        "--card-glass-highlight",
+        isDark ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.65)"
+      );
+      root.style.setProperty(
+        "--card-glass-shadow",
+        isDark
+          ? `0 8px 32px rgba(0,0,0,0.45), 0 0 24px rgba(${accent.rgb},0.08)`
+          : `0 8px 32px rgba(${accent.rgb},0.12), 0 1px 2px rgba(0,0,0,0.04)`
+      );
+      root.style.setProperty(
+        "--card-glass-tint",
+        `rgba(${accent.rgb},0.06)`
+      );
+    } else {
+      root.style.setProperty("--card-bg", "var(--bg-surface)");
+      root.style.setProperty("--card-backdrop", "none");
+      root.style.setProperty("--card-border", "var(--border-subtle)");
+      root.style.setProperty("--card-glass-highlight", "transparent");
+      root.style.setProperty("--card-glass-shadow", "var(--shadow-card, none)");
+      root.style.setProperty("--card-glass-tint", "transparent");
+    }
+
+    /* ── Ambient page glow ───────────────────────────────────────
+     * Soft radial accent bloom behind the page, visible through
+     * glass cards — matches the colored ambient backdrop in each
+     * of the 6 accent mockups.
+     */
     root.style.setProperty(
-      "--card-bg",
-      settings.cardStyle === "glass"
-        ? effectiveMode === "dark"
-          ? "rgba(28,46,64,0.6)"
-          : "rgba(255,255,255,0.6)"
-        : "var(--bg-surface)"
-    );
-    root.style.setProperty(
-      "--card-backdrop",
-      settings.cardStyle === "glass" ? "blur(16px) saturate(1.4)" : "none"
-    );
-    root.style.setProperty(
-      "--card-border",
-      settings.cardStyle === "glass"
-        ? effectiveMode === "dark"
-          ? "rgba(255,255,255,0.08)"
-          : "rgba(255,255,255,0.6)"
-        : "var(--border-subtle)"
+      "--page-glow",
+      isGlass
+        ? `radial-gradient(circle at 15% 0%, rgba(${accent.rgb},${isDark ? "0.16" : "0.10"}), transparent 60%)`
+        : "none"
     );
 
     // Compact mode
